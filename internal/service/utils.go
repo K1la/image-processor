@@ -101,7 +101,7 @@ func encode(format string, dst image.Image, w *os.File) error {
 }
 
 func addLabel(img draw.Image, x, y int, label string, fontSize float64) error {
-	bytes, err := os.Open("static/font.ttf")
+	bytes, err := os.Open("web/font.ttf")
 	if err != nil {
 		return err
 	}

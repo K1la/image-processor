@@ -21,5 +21,5 @@ type FileRepo interface {
 
 type Queue interface {
 	ProduceMessage(model.Message) error
-	ConsumeMessage() (model.Message, error)
+	ConsumeMessage() (*model.Message, error)
 }

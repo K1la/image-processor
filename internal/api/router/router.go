@@ -1,10 +1,11 @@
 package router
 
 import (
-	"github.com/K1la/image-processor/internal/api/handler"
 	"net/http"
-	"os"
 	"path/filepath"
+	"strings"
+
+	"github.com/K1la/image-processor/internal/api/handler"
 
 	"github.com/wb-go/wbf/ginext"
 )
@@ -17,9 +18,10 @@ func New(handler *handler.Handler) *ginext.Engine {
 	api := e.Group("/api/")
 	{
 		api.POST("/upload", handler.CreateImage)
-		api.GET("/image/:id", handler.GetImageByID)
+		api.GET("/image/:id", handler.GetImageById)
 		api.GET("/image/info/:id", handler.GetImageInfoByID)
-		api.DELETE("/image/:id", handler.DeleteImage)
+		api.DELETE("/image/:id", handler.DeleteImageByID)
+
 	}
 
 	// Frontend: serve files from ./web without conflicting wildcard
@@ -28,10 +30,10 @@ func New(handler *handler.Handler) *ginext.Engine {
 			http.ServeFile(c.Writer, c.Request, "./web/index.html")
 			return
 		}
-		safe := filepath.Clean("." + c.Request.URL.Path)
-		filePath := filepath.Join("./web", safe)
-		if fi, err := os.Stat(filePath); err == nil && !fi.IsDir() {
-			http.ServeFile(c.Writer, c.Request, filePath)
+		// Serve only files under /web/ directly from disk
+		if strings.HasPrefix(c.Request.URL.Path, "/web/") {
+			safe := filepath.Clean("." + c.Request.URL.Path)
+			http.ServeFile(c.Writer, c.Request, safe)
 			return
 		}
 		c.Status(http.StatusNotFound)

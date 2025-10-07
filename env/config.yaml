@@ -7,7 +7,7 @@ postgres:
   host: "db"
   port: "5432"
   user: "postgres"
-  name: "image-proccesor"
+  name: "image-processor"
   password: "" # set via .env DB_PASSWORD
 
 redis:

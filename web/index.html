@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Image Processor</title>
+    <link rel="stylesheet" href="/web/styles.css" />
+</head>
+<body>
+<header class="header">
+    <div class="container header__inner">
+        <div class="brand">
+            <div class="logo">IP</div>
+            <div>
+                <h1>Image Processor</h1>
+                <p class="subtitle">Загрузите изображение → выберите задачу → получите результат</p>
+            </div>
+        </div>
+        <nav class="nav">
+            <a href="#upload" class="nav-link">Загрузка</a>
+            <a href="#gallery" class="nav-link">Галерея</a>
+        </nav>
+    </div>
+    <div class="header__glow"></div>
+    <div class="header__grid"></div>
+    <div id="toasts" class="toasts"></div>
+</header>
+
+<main class="container">
+    <section id="upload" class="card card--elevated">
+        <div class="uploader">
+            <div id="dropzone" class="dropzone">
+                <input type="file" id="imageFile" name="image" accept="image/png,image/jpeg,image/jpg,image/gif" />
+                <div class="dz-content">
+                    <div class="dz-icon">⬆</div>
+                    <div>
+                        <strong>Перетащите изображение</strong> или нажмите, чтобы выбрать файл
+                        <div class="muted small">Поддерживаются PNG, JPEG, GIF</div>
+                    </div>
+                </div>
+            </div>
+
+            <form id="uploadForm" class="form">
+                <div class="grid">
+                    <label>
+                        Задача
+                        <select id="task" required>
+                            <option value="resize">resize</option>
+                            <option value="miniature generating">thumbnail</option>
+                            <option value="watermark">watermark</option>
+                        </select>
+                    </label>
+
+                    <label data-task="resize">
+                        Width
+                        <input type="number" id="width" placeholder="e.g. 800" min="1" />
+                    </label>
+                    <label data-task="resize">
+                        Height
+                        <input type="number" id="height" placeholder="e.g. 600" min="1" />
+                    </label>
+
+                    <label data-task="watermark" class="hidden">
+                        Watermark text
+                        <input type="text" id="watermark" placeholder="© My Brand" />
+                    </label>
+                </div>
+
+                <div class="actions-row">
+                    <button type="submit" class="btn">
+                        <span class="btn-icon">⇪</span> Загрузить
+                    </button>
+                    <span id="uploadMsg" class="muted"></span>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section id="gallery" class="card card--elevated">
+        <h2>Ваши изображения</h2>
+        <ul id="images" class="images"></ul>
+    </section>
+</main>
+
+<template id="imageItemTmpl">
+    <li class="image-item" data-id="">
+        <div class="thumb">
+            <div class="thumb-overlay"></div>
+            <img class="preview hidden" alt="preview" />
+            <div class="placeholder">
+                <div class="spinner"></div>
+                <div>В обработке…</div>
+                <div class="progress"><div class="bar"></div></div>
+            </div>
+        </div>
+        <div class="meta">
+            <div>
+                <span class="id"></span>
+                <span class="status badge">in progress</span>
+            </div>
+            <div class="actions">
+                <button class="btn btn-secondary view" disabled>
+                    <span class="btn-icon">⤓</span> Скачать
+                </button>
+                <button class="btn btn-danger delete" disabled>
+                    <span class="btn-icon">✕</span> Удалить
+                </button>
+            </div>
+        </div>
+    </li>
+</template>
+
+<script src="/web/app.js"></script>
+</body>
+</html>
+

@@ -1,8 +1,8 @@
 services:
-  shortener:
+  backend:
     build: .
-    command: ./shortener
-    container_name: url_shortener
+    command: ./image-processor
+    container_name: image_processor
     ports:
       - "8080:8080"
     depends_on:
@@ -24,7 +24,7 @@ services:
 
   migrator:
     image: kukymbr/goose-docker:3.24.2
-    container_name: migrator-shortener
+    container_name: migrator-image
     command: up
     depends_on:
       db:
@@ -47,7 +47,7 @@ services:
 
   db:
     image: postgres
-    container_name: postgres-url-shortener
+    container_name: postgres-image-processor
     restart: always
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -69,7 +69,7 @@ services:
 
   kafka:
     image: apache/kafka:latest
-    container_name: kafka
+    container_name: kafka-image-processor
     ports:
       - "9092:9092"
     environment:

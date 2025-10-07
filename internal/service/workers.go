@@ -48,8 +48,7 @@ func (s *Service) handleMessage(ctx context.Context) error {
 	}
 	file.Close()
 
-	// TODO: проверить с указателем
-	if err = s.ProcessImage(message); err != nil {
+	if err = s.ProcessImage(*message); err != nil {
 		return fmt.Errorf("could not process image: %w", err)
 	}
 

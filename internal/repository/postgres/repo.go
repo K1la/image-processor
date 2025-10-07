@@ -1,18 +1,24 @@
-package repository
+package postgres
 
 import (
+	"errors"
 	"fmt"
+
 	"github.com/K1la/image-processor/internal/config"
 	"github.com/wb-go/wbf/dbpg"
 	"github.com/wb-go/wbf/zlog"
 )
 
-type Repository struct {
+var (
+	ErrNoSuchImage = errors.New("there is no image with such id")
+)
+
+type Postgres struct {
 	db *dbpg.DB
 }
 
-func New(db *dbpg.DB) *Repository {
-	return &Repository{db: db}
+func New(db *dbpg.DB) *Postgres {
+	return &Postgres{db: db}
 }
 
 func NewDB(cfg *config.Config) *dbpg.DB {
