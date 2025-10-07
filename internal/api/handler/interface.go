@@ -7,10 +7,9 @@ import (
 )
 
 type ServiceI interface {
+	CreateImage(context.Context, []byte, model.Message) (*uuid.UUID, error)
 	ProcessImage(context.Context, model.Message) error
 	GetImageStatus(context.Context, uuid.UUID) (*model.Image, error)
 	GetImageById(context.Context, uuid.UUID) (string, error)
-	CreateImage(context.Context, []byte, model.Message) (*uuid.UUID, error)
 	DeleteImage(context.Context, uuid.UUID) error
 }
-s
