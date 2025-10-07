@@ -1,0 +1,24 @@
+http_server:
+  address: ":8080"
+  timeout: 10
+  idle_timeout: 30
+
+postgres:
+  host: "db"
+  port: "5432"
+  user: "postgres"
+  name: "image-proccesor"
+  password: "" # set via .env DB_PASSWORD
+
+redis:
+  host: "redis"
+  port: "6379"
+  password: "" # optional, code reads REDIS_PASSWORD from env
+
+minio:
+  host: "minio"
+  port: ":9000"
+
+kafka:
+  host: "kafka"
+  port: ":9092"
