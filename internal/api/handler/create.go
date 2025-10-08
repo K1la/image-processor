@@ -16,7 +16,7 @@ func (h *Handler) CreateImage(c *ginext.Context) {
 	imageHeader, err := c.FormFile("image")
 	if err != nil {
 		zlog.Logger.Error().Err(err).Msg("invalid image")
-		response.BadRequest(c.Writer, fmt.Errorf("invalid image: %w", err))
+		response.BadRequest(c, fmt.Errorf("invalid image: %w", err))
 		return
 
 	}
@@ -24,7 +24,7 @@ func (h *Handler) CreateImage(c *ginext.Context) {
 	file, err := imageHeader.Open()
 	if err != nil {
 		zlog.Logger.Error().Err(err).Msg("could not open the image")
-		response.BadRequest(c.Writer, fmt.Errorf("could not open the image: %w", err))
+		response.BadRequest(c, fmt.Errorf("could not open the image: %w", err))
 		return
 	}
 	defer file.Close()
@@ -32,7 +32,7 @@ func (h *Handler) CreateImage(c *ginext.Context) {
 	fileBytes, err := io.ReadAll(file)
 	if err != nil {
 		zlog.Logger.Error().Err(err).Msg("could not read the image")
-		response.BadRequest(c.Writer, fmt.Errorf("could not read the image: %w", err))
+		response.BadRequest(c, fmt.Errorf("could not read the image: %w", err))
 		return
 	}
 
@@ -40,7 +40,7 @@ func (h *Handler) CreateImage(c *ginext.Context) {
 	var message model.Message
 	if err = json.Unmarshal([]byte(metadataStr), &message); err != nil {
 		zlog.Logger.Error().Err(err).Msg("could not unmarshal the metadata")
-		response.BadRequest(c.Writer, fmt.Errorf("could not unmarshal the metadata: %w", err))
+		response.BadRequest(c, fmt.Errorf("could not unmarshal the metadata: %w", err))
 		return
 	}
 
@@ -48,13 +48,13 @@ func (h *Handler) CreateImage(c *ginext.Context) {
 	if err != nil {
 		if errors.Is(err, service.ErrInvalidImageFormat) || errors.Is(err, service.ErrInvalidTask) {
 			zlog.Logger.Error().Err(err).Msg("could not create the image")
-			response.BadRequest(c.Writer, fmt.Errorf("could not create the image: %w", err))
+			response.BadRequest(c, fmt.Errorf("could not create the image: %w", err))
 		}
 		zlog.Logger.Error().Err(err).Msg("could not create the image")
-		response.Internal(c.Writer, fmt.Errorf("could not create the image: %w", err))
+		response.Internal(c, fmt.Errorf("could not create the image: %w", err))
 		return
 	}
 
 	zlog.Logger.Info().Interface("id", id).Msg("successfully created the image with id <-")
-	response.Created(c.Writer, id)
+	response.Created(c, id)
 }

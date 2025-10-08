@@ -18,24 +18,24 @@ func (h *Handler) GetImageById(c *ginext.Context) {
 	id, err := uuid.Parse(uid)
 	if err != nil {
 		zlog.Logger.Error().Err(err).Msg("could not parse uuid from id")
-		response.BadRequest(c.Writer, fmt.Errorf("could not parse uuid from id: %w", err))
+		response.BadRequest(c, fmt.Errorf("could not parse uuid from id: %w", err))
 		return
 	}
 
 	image, err := h.service.GetImageById(c.Request.Context(), id)
 	if err != nil {
 		if errors.Is(err, service.ErrNotProcessed) {
-			response.OK(c.Writer, "in processing, wait please")
+			response.OK(c, "in processing, wait please")
 			return
 		}
 
 		if errors.Is(err, postgres.ErrNoSuchImage) {
-			response.BadRequest(c.Writer, err)
+			response.BadRequest(c, err)
 			return
 		}
 
 		zlog.Logger.Error().Err(err).Msg("could not get image")
-		response.Internal(c.Writer, fmt.Errorf("could not get image: %w", err))
+		response.Internal(c, fmt.Errorf("could not get image: %w", err))
 		return
 	}
 
@@ -52,21 +52,21 @@ func (h *Handler) GetImageInfoByID(c *ginext.Context) {
 	id, err := uuid.Parse(uid)
 	if err != nil {
 		zlog.Logger.Error().Err(err).Msg("could not parse id to uuid")
-		response.BadRequest(c.Writer, fmt.Errorf("invalid id was provided: %w", err))
+		response.BadRequest(c, fmt.Errorf("invalid id was provided: %w", err))
 		return
 	}
 
 	info, err := h.service.GetImageStatus(c.Request.Context(), id)
 	if err != nil {
 		if errors.Is(err, postgres.ErrNoSuchImage) {
-			response.OK(c.Writer, err.Error())
+			response.OK(c, err.Error())
 			return
 		}
 		zlog.Logger.Error().Err(err).Msg("could not get image info")
-		response.Internal(c.Writer, fmt.Errorf("could not get image info: %w", err))
+		response.Internal(c, fmt.Errorf("could not get image info: %w", err))
 		return
 	}
 
 	zlog.Logger.Info().Str("id", id.String()).Msg("successfully handled GET request and returned image info to user")
-	response.OK(c.Writer, info)
+	response.OK(c, info)
 }

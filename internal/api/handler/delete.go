@@ -14,16 +14,16 @@ func (h *Handler) DeleteImageByID(c *ginext.Context) {
 	id, err := uuid.Parse(uid)
 	if err != nil {
 		zlog.Logger.Error().Err(err).Msg("could not parse id to uuid")
-		response.BadRequest(c.Writer, fmt.Errorf("invalid id was provided: %w", err))
+		response.BadRequest(c, fmt.Errorf("invalid id was provided: %w", err))
 		return
 	}
 
 	if err = h.service.DeleteImage(c.Request.Context(), id); err != nil {
 		zlog.Logger.Error().Err(err).Msg("could not delete image")
-		response.Internal(c.Writer, fmt.Errorf("could not delete image: %w", err))
+		response.Internal(c, fmt.Errorf("could not delete image: %w", err))
 		return
 	}
 
 	zlog.Logger.Info().Msg("successfully handled DELETE request and deleted image")
-	response.OK(c.Writer, "successfully deleted image")
+	response.OK(c, "successfully deleted image")
 }

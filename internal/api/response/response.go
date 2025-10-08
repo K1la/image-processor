@@ -1,10 +1,8 @@
 package response
 
 import (
-	"encoding/json"
+	"github.com/wb-go/wbf/ginext"
 	"net/http"
-
-	"github.com/wb-go/wbf/zlog"
 )
 
 type Success struct {
@@ -12,34 +10,29 @@ type Success struct {
 }
 
 type Error struct {
-	Message string `json:"message"`
+	Message string `json:"error"`
 }
 
-func JSON(w http.ResponseWriter, status int, data interface{}) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-
-	if err := json.NewEncoder(w).Encode(data); err != nil {
-		zlog.Logger.Error().Err(err).Interface("data", data).Msg("failed to encode JSON response")
-	}
+func JSON(c *ginext.Context, status int, data interface{}) {
+	c.JSON(status, data)
 }
 
-func Created(w http.ResponseWriter, result interface{}) {
-	JSON(w, http.StatusCreated, Success{Result: result})
+func Created(c *ginext.Context, result interface{}) {
+	JSON(c, http.StatusCreated, Success{Result: result})
 }
 
-func OK(w http.ResponseWriter, result interface{}) {
-	JSON(w, http.StatusOK, Success{Result: result})
+func OK(c *ginext.Context, result interface{}) {
+	JSON(c, http.StatusOK, Success{Result: result})
 }
 
-func Internal(w http.ResponseWriter, err error) {
-	JSON(w, http.StatusInternalServerError, Error{Message: err.Error()})
+func Internal(c *ginext.Context, err error) {
+	JSON(c, http.StatusInternalServerError, Error{Message: err.Error()})
 }
 
-func BadRequest(w http.ResponseWriter, err error) {
-	JSON(w, http.StatusBadRequest, Error{Message: err.Error()})
+func BadRequest(c *ginext.Context, err error) {
+	JSON(c, http.StatusBadRequest, Error{Message: err.Error()})
 }
 
-func Fail(w http.ResponseWriter, status int, err error) {
-	JSON(w, status, Error{Message: err.Error()})
+func Fail(c *ginext.Context, status int, err error) {
+	JSON(c, status, Error{Message: err.Error()})
 }
